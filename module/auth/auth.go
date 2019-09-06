@@ -5,10 +5,10 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"log"
 	pb "pikachu/demo/protobuf/demo"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc/status"
 )
@@ -33,6 +33,7 @@ type Data struct {
 // Login -
 func (s *Server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginResponse, error) {
 
+	log.Printf("call login with param : %v  \n", in)
 	token := hashToken(in.GetAccount(), in.GetPassword())
 
 	tokenByUser[token] = Data{
@@ -46,6 +47,8 @@ func (s *Server) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginRespo
 
 // Logout -
 func (s *Server) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutResponse, error) {
+	log.Printf("call logout with param : %v  \n", in)
+
 	resp := &pb.LogoutResponse{}
 
 	if _, ok := tokenByUser[in.GetToken()]; !ok {
@@ -63,7 +66,7 @@ func (s *Server) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.LogoutRe
 
 // List -
 func (s *Server) List(ctx context.Context, in *pb.TokenListRequest) (*pb.TokenListResponse, error) {
-	spew.Dump(in)
+	log.Printf("call list with param : %v  \n", in)
 	total := int32(len(tokenByUser))
 
 	ans := make([]*pb.TokenContext, 0)
@@ -84,6 +87,8 @@ func (s *Server) List(ctx context.Context, in *pb.TokenListRequest) (*pb.TokenLi
 
 // ListBySteam -
 func (s *Server) ListBySteam(in *pb.TokenListRequest, stream pb.Auth_ListBySteamServer) error {
+	log.Printf("call listbystream with param : %v  \n", in)
+
 	total := int32(len(tokenByUser))
 
 	for _, v := range tokenByUser {
