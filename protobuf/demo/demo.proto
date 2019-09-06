@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+// 生成auth 套件
+package demo;
+
+// option go_package = "pikachu/demo/protobuf";
+
+// 導入 google timestamp 包
+import "google/protobuf/timestamp.proto";
+
+service User {
+  // 檢查 Token 是否存在
+  rpc Create(UserInfo) returns (StatusReply) {}
+  //
+  rpc Delete(UserInfo) returns (StatusReply) {}
+  //
+  rpc Get(UserInfo) returns (UserInfoResponse) {}
+  //
+  rpc List(UserListRequest) returns (UserListResponse) {}
+  //
+  rpc ListSteam(UserListRequest) returns (stream UserListSteamResponse) {}
+}
+
+service Auth {
+  // 儲存 Token
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+  // 刪除 Token
+  rpc Logout(LogoutRequest) returns (LogoutResponse) {}
+  //
+  rpc List(TokenListRequest) returns (TokenListResponse) {}
+  //
+  rpc ListBySteam(TokenListRequest) returns (stream TokenListStreamResponse) {}
+}
+
+service Report {
+  rpc GetStream(ReportRequest) returns (stream ReportResponse) {}
+}
+
+enum Role {
+  Nono = 0;
+  Super = 1;
+  Admin = 2;
+  Member = 3;
+}
+
+// User -
+message UserInfo {
+  string id = 1;
+  string account = 2;
+  string password = 3;
+  Role role = 4;
+  string name = 6;
+}
+
+message UserInfoResponse {
+  StatusReply status = 1;
+  UserInfo user = 2;
+}
+
+message UserListRequest {
+  ListRequest list = 1;
+  Role role = 2;
+}
+message UserListResponse {
+  int32 total = 1;
+  repeated UserInfo user = 2;
+}
+
+message UserListSteamResponse {
+  int32 total = 1;
+  UserInfo user = 2;
+}
+
+message LoginRequest {
+  string account = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  StatusReply status = 1;
+  string token = 2;
+}
+
+message LogoutRequest { string token = 1; }
+message LogoutResponse { StatusReply status = 1; }
+
+// TokenListRequest -
+message TokenListRequest { ListRequest list = 1; }
+
+// TokenListResponse -
+message TokenListResponse {
+  // total  - 清單總數
+  int32 total = 1;
+  // data 清單內容
+  repeated TokenContext data = 2;
+}
+
+message TokenListStreamResponse {
+  // total  - 清單總數
+  int32 total = 1;
+  // data 清單內容
+  TokenContext data = 2;
+}
+
+message TokenContext {
+  string id = 1;
+  string token = 2;
+  string userid = 3;
+}
+
+message ReportRequest {
+  google.protobuf.Timestamp start = 1;
+  google.protobuf.Timestamp end = 2;
+}
+
+//
+message ReportResponse {
+  google.protobuf.Timestamp time = 1;
+  double point = 2;
+}
+
+//
+
+message ListRequest {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+message StatusReply {
+  int32 code = 1;
+  string msg = 2;
+  google.protobuf.Timestamp unix = 3;
+}
