@@ -18,7 +18,7 @@ import (
 var serverCmd = &cobra.Command{
 	Use: "server",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("server called")
+		fmt.Printf("Start gRPC Server on Port : %v", env.Port)
 		startgRPC()
 	},
 }
@@ -36,8 +36,12 @@ func startgRPC() error {
 		log.Fatalf("start grpc server error : %v", err)
 	}
 
+	// grpc 設定
+	//opts := []grpc.ServerOption{}
+
 	s := grpc.NewServer()
 
+	// 註冊服務
 	pbdemo.RegisterAuthServer(s, &auth.Server{})
 	//pbdemo.RegisterUserServer(s, user.Server{})
 	//pbdemo.RegisterReportServer(s, report.Server{})
@@ -45,5 +49,6 @@ func startgRPC() error {
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to start server : %v", err)
 	}
+
 	return nil
 }
