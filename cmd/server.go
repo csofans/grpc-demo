@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"pikachu/demo/controller"
 	"pikachu/demo/env"
-	"pikachu/demo/module/auth"
 
 	pbdemo "pikachu/demo/protobuf/demo"
 
@@ -42,7 +42,7 @@ func startgRPC() error {
 	s := grpc.NewServer()
 
 	// 註冊服務
-	pbdemo.RegisterAuthServer(s, &auth.Server{})
+	pbdemo.RegisterAuthServer(s, &controller.AuthServer{})
 	//pbdemo.RegisterUserServer(s, user.Server{})
 	//pbdemo.RegisterReportServer(s, report.Server{})
 
