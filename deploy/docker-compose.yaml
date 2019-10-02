@@ -16,7 +16,7 @@ services:
       - demo
 
   demo:
-    image: registry.gitlab.com/axolotl.team/pikachu/demo/api:0.0.1
+    image: registry.gitlab.com/axolotl.team/pikachu/demo/api:0.2.0
     networks:
       axolotl:
     command: server -p 5000
