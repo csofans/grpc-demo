@@ -2,7 +2,6 @@ package controller
 
 import (
 	"context"
-	"errors"
 	"log"
 	"pikachu/demo/module/auth"
 
@@ -27,14 +26,14 @@ func (s *AuthServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginR
 	_ = token
 
 	if err != nil {
-		//return &pb.LoginResponse{}, status.New(codes.NotFound, "User Not Found").Err()
+		return &pb.LoginResponse{}, status.New(codes.NotFound, "User Not Found").Err()
 	}
 
-	return &pb.LoginResponse{}, errors.New("Code: 1000  Desc: 999 Unix:930203920930293")
+	//return &pb.LoginResponse{}, errors.New("Code: 1000  Desc: 999 Unix:930203920930293")
 
 	//return &pb.LoginResponse{Token: token, Status: &pb.StatusReply{Code: 0, Msg: "Success", Unix: ptypes.TimestampNow()}}, nil
-	//return &pb.LoginResponse{Token: token, Status: &pb.StatusReply{Code: 0, Msg: "Success", Unix: ptypes.TimestampNow()}},
-	//status.New(codes.OK, "msg").Err()
+	return &pb.LoginResponse{Token: token, Status: &pb.StatusReply{Code: 0, Msg: "Success", Unix: ptypes.TimestampNow()}},
+		status.New(codes.OK, "success").Err()
 }
 
 // Logout -
