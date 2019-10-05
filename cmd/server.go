@@ -43,6 +43,7 @@ func startgRPC() error {
 
 	// 註冊服務
 	pbdemo.RegisterAuthServer(s, &controller.AuthServer{})
+	pbdemo.RegisterUserServer(s, &controller.UserServer{})
 	//pbdemo.RegisterUserServer(s, user.Server{})
 	//pbdemo.RegisterReportServer(s, report.Server{})
 
