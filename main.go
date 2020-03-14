@@ -15,8 +15,8 @@ limitations under the License.
 */
 package main
 
-import "pikachu/demo/cmd"
+import "grpc-demo/cmd"
 
 func main() {
-  cmd.Execute()
+	cmd.Execute()
 }

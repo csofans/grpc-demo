@@ -2,10 +2,10 @@ package controller
 
 import (
 	"context"
+	"grpc-demo/module/auth"
 	"log"
-	"pikachu/demo/module/auth"
 
-	pb "pikachu/demo/protobuf/demo"
+	pb "grpc-demo/protobuf/demo"
 
 	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc/codes"
@@ -29,11 +29,8 @@ func (s *AuthServer) Login(ctx context.Context, in *pb.LoginRequest) (*pb.LoginR
 		return &pb.LoginResponse{}, status.New(codes.NotFound, "User Not Found").Err()
 	}
 
-	//return &pb.LoginResponse{}, errors.New("Code: 1000  Desc: 999 Unix:930203920930293")
-
-	//return &pb.LoginResponse{Token: token, Status: &pb.StatusReply{Code: 0, Msg: "Success", Unix: ptypes.TimestampNow()}}, nil
 	return &pb.LoginResponse{Token: token, Status: &pb.StatusReply{Code: 0, Msg: "Success", Unix: ptypes.TimestampNow()}},
-		status.New(codes.OK, "success").Err()
+		status.Error(codes.OK, "success")
 }
 
 // Logout -
@@ -52,7 +49,8 @@ func (s *AuthServer) Logout(ctx context.Context, in *pb.LogoutRequest) (*pb.Logo
 		Msg:  "success",
 		Unix: ptypes.TimestampNow(),
 	}
-	return resp, nil
+	return resp, status.Error(codes.OK, "success")
+
 }
 
 // List -
@@ -76,7 +74,8 @@ func (s *AuthServer) List(ctx context.Context, in *pb.TokenListRequest) (*pb.Tok
 	return &pb.TokenListResponse{
 		Total: total,
 		Data:  ans,
-	}, nil
+	}, status.Error(codes.OK, "success")
+
 }
 
 // ListBySteam -
@@ -97,5 +96,5 @@ func (s *AuthServer) ListBySteam(in *pb.TokenListRequest, stream pb.Auth_ListByS
 		})
 	}
 
-	return nil
+	return status.Error(codes.OK, "success")
 }

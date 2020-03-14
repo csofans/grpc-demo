@@ -2,16 +2,21 @@ package cmd
 
 import (
 	"fmt"
+	"grpc-demo/controller"
+	"grpc-demo/env"
 	"log"
 	"net"
-	"pikachu/demo/controller"
-	"pikachu/demo/env"
 
-	pbdemo "pikachu/demo/protobuf/demo"
+	pbdemo "grpc-demo/protobuf/demo"
 
-	//"github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_middleware "github.com/grpc-ecosystem/go-grpc-middleware"
+	grpc_logrus "github.com/grpc-ecosystem/go-grpc-middleware/logging/logrus"
+	grpc_recovery "github.com/grpc-ecosystem/go-grpc-middleware/recovery"
+	"github.com/sirupsen/logrus"
+
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 // serverCmd represents the server command
@@ -35,17 +40,30 @@ func startgRPC() error {
 	if err != nil {
 		log.Fatalf("start grpc server error : %v", err)
 	}
+	l := logrus.New().WithField("service", "demo")
+
+	s := grpc.NewServer(
+		grpc.UnaryInterceptor(
+			grpc_middleware.ChainUnaryServer(
+				grpc_logrus.UnaryServerInterceptor(l),
+				grpc_recovery.UnaryServerInterceptor(),
+			),
+		),
+		grpc.StreamInterceptor(
+			grpc_middleware.ChainStreamServer(
+				grpc_logrus.StreamServerInterceptor(l),
+				grpc_recovery.StreamServerInterceptor(),
+			),
+		),
+	)
+
+	reflection.Register(s)
 
 	// grpc 設定
-	//opts := []grpc.ServerOption{}
-
-	s := grpc.NewServer()
 
 	// 註冊服務
 	pbdemo.RegisterAuthServer(s, &controller.AuthServer{})
 	pbdemo.RegisterUserServer(s, &controller.UserServer{})
-	//pbdemo.RegisterUserServer(s, user.Server{})
-	//pbdemo.RegisterReportServer(s, report.Server{})
 
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to start server : %v", err)

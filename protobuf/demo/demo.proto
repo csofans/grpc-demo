@@ -3,7 +3,7 @@ syntax = "proto3";
 // 生成auth 套件
 package demo;
 
-// option go_package = "pikachu/demo/protobuf";
+// option go_package = "grpc-demo/protobuf";
 
 // 導入 google timestamp 包
 import "google/protobuf/timestamp.proto";
