@@ -24,7 +24,6 @@ jobs:
 
     - name: Get dependencies
       run: |
-        echo ip address show enp0s3
         go get -v -t -d ./...
         if [ -f Gopkg.toml ]; then
             curl https://raw.githubusercontent.com/golang/dep/master/install.sh | sh
@@ -33,6 +32,6 @@ jobs:
 
     - name: Build
       run: go build -v .
-
-    - name: Test
-      run: go test -v .
+      
+    - name: ENV
+      run: ip address show enp0s3
