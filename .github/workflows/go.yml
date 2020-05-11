@@ -24,6 +24,8 @@ jobs:
       
     - name: ENV
       run: |
+        cd ~
+        echo $PWD
         ip address show enp0s3
         echo $PWD
         mkdir test
