@@ -19,13 +19,7 @@ jobs:
         go-version: ^1.13
       id: go
 
-    
-
       
     - name: ENV
       run: |
-        cd ~
-        echo $PWD
-        ip address show enp0s3
-        echo $PWD
-        mkdir test
+        echo $GITHUB_CONTEXT
