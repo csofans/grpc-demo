@@ -22,4 +22,4 @@ jobs:
       
     - name: ENV
       run: |
-        echo $GITHUB_CONTEXT
+        echo ${{ github.event }}
